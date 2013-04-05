@@ -1,21 +1,22 @@
 package org.svenehrke.library
 
-import javafx.collections.ObservableList
+import javafx.beans.value.ChangeListener
 import javafx.collections.FXCollections
+import javafx.collections.ObservableList
 import org.opendolphin.core.client.ClientDolphin
 import org.opendolphin.core.client.ClientPresentationModel
-import static org.svenehrke.library.Constants.PM_ID.SELECTED
-import static org.svenehrke.library.Constants.CMD.PULL
 
 import static groovyx.javafx.GroovyFX.start
 import static org.opendolphin.binding.JavaFxUtil.value
+import static org.svenehrke.library.Constants.CMD.PULL
+import static org.svenehrke.library.Constants.PM_ID.SELECTED
 
 @SuppressWarnings("GroovyAssignabilityCheck")
 class LibraryView {
 	static show(ClientDolphin clientDolphin) {
 
 		ObservableList<ClientPresentationModel> observableBooks = FXCollections.observableArrayList()
-		def selectedBook = clientDolphin.presentationModel(SELECTED, portfolioId: null )
+		def selectedBook = clientDolphin.presentationModel(SELECTED, bookId: null )
 
 		start { app ->
 			def sgb = delegate
@@ -32,13 +33,18 @@ class LibraryView {
 						}
 						stackPane {
 							text "Please select a Book", id: 'welcome'
-							tabPane id:'bookTabs'
+							pane id:'bookDetails'
 						}
 					}
 				}
 			}
 
 			books.items = observableBooks
+
+			books.selectionModel.selectedItemProperty().addListener( { o, oldVal, selectedPM ->
+				if (null == selectedPM) return // happens on deselect
+				selectedBook.bookId.value = selectedPM.id
+			} as ChangeListener)
 
 			clientDolphin.send PULL, { pms ->
 				for (pm in pms) {
