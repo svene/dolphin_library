@@ -5,7 +5,7 @@ import javafx.collections.FXCollections
 import org.opendolphin.core.client.ClientDolphin
 import org.opendolphin.core.client.ClientPresentationModel
 import static org.svenehrke.library.Constants.PM_ID.SELECTED
-import static org.svenehrke.library.Constants.PM_ID.PULL
+import static org.svenehrke.library.Constants.CMD.PULL
 
 import static groovyx.javafx.GroovyFX.start
 import static org.opendolphin.binding.JavaFxUtil.value
@@ -26,8 +26,8 @@ class LibraryView {
 						vbox alignment: 'top_center', {
 							label "Books", id: 'bookListTitle'
 							tableView id: 'books', selectionMode: 'single', vgrow: 'always', {
-								value 'name',  tableColumn('Title', prefWidth: sgb.bind(books.width() / 2) )
-								value 'total', tableColumn('Author',     prefWidth: sgb.bind(books.width() / 2) )
+								value 'title',  tableColumn('Title', prefWidth: sgb.bind(books.width() / 2) )
+								value 'author', tableColumn('Author',     prefWidth: sgb.bind(books.width() / 2) )
 							}
 						}
 						stackPane {
