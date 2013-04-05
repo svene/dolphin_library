@@ -10,16 +10,18 @@ class InMemoryBookService implements IBookService {
 	@Override
 	List<DTO> list() {
 		List<DTO> books = new LinkedList<DTO>();
-		books.add(new DTO(
-			new Slot(DOMAIN_ID, 1),
-			new Slot(TITLE, 'Refactoring'),
-			new Slot(AUTHOR, 'Martin Fowler'),
-		));
-		books.add(new DTO(
-			new Slot(DOMAIN_ID, 2),
-			new Slot(TITLE, 'Design Patterns'),
-			new Slot(AUTHOR, 'Gang of Four'),
-		));
+		books.addAll(
+			new DTO(
+				new Slot(DOMAIN_ID, 1),
+				new Slot(TITLE, 'Refactoring'),
+				new Slot(AUTHOR, 'Martin Fowler'),
+			),
+			new DTO(
+				new Slot(DOMAIN_ID, 2),
+				new Slot(TITLE, 'Design Patterns'),
+				new Slot(AUTHOR, 'Gang of Four'),
+			)
+		);
 
 		books
 	}
