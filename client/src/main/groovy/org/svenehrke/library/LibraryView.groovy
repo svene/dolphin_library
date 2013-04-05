@@ -4,6 +4,8 @@ import javafx.collections.ObservableList
 import javafx.collections.FXCollections
 import org.opendolphin.core.client.ClientDolphin
 import org.opendolphin.core.client.ClientPresentationModel
+import static org.svenehrke.library.Constants.PM_ID.SELECTED
+import static org.svenehrke.library.Constants.PM_ID.PULL
 
 import static groovyx.javafx.GroovyFX.start
 import static org.opendolphin.binding.JavaFxUtil.value
@@ -13,6 +15,7 @@ class LibraryView {
 	static show(ClientDolphin clientDolphin) {
 
 		ObservableList<ClientPresentationModel> observableBooks = FXCollections.observableArrayList()
+		def selectedBook = clientDolphin.presentationModel(SELECTED, portfolioId: null )
 
 		start { app ->
 			def sgb = delegate
@@ -36,6 +39,14 @@ class LibraryView {
 			}
 
 			books.items = observableBooks
+
+			clientDolphin.send PULL, { pms ->
+				for (pm in pms) {
+					observableBooks << pm
+				}
+				fadeTransition(1.s, node: books, to: 1).playFromStart()
+			}
+
 
 			primaryStage.show()
 		}
