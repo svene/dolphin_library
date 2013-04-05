@@ -3,8 +3,10 @@ apply plugin: 'application'
 dependencies {
     compile project.files("${System.properties['java.home']}/lib/jfxrt.jar")
     compile project(':shared')
-    compile "org.open-dolphin:dolphin-client-javafx:$dolphinVersion"
-    compile "org.open-dolphin:dolphin-client:$dolphinVersion"
+    compile "org.open-dolphin:dolphin-client-javafx:$dolphinVersion",
+    "org.open-dolphin:dolphin-client:$dolphinVersion",
+	'org.codehaus.groovyfx:groovyfx:0.2',
+	'org.jfxtras:jfxtras-labs:2.2-r4'
 }
 
 mainClassName = 'org.svenehrke.library.ApplicationStarter'
