@@ -34,16 +34,22 @@ class LibraryView {
 						}
 						stackPane {
 							text "Please select a Book", id: 'welcome'
-							pane id:'bookDetails', { editor.cachedOrNewView(sgb) }
+							pane id:'bookDetails'
 						}
 					}
 				}
 			}
 
+			sgb.bookDetails.children << editor.cachedOrNewView(sgb)
+
+//			bind 'visible' of bookDetails to 'bookId' of selectedBook
+
 			books.items = observableBooks
 
 			books.selectionModel.selectedItemProperty().addListener( { o, oldVal, selectedPM ->
-				if (null == selectedPM) return // happens on deselect
+				if (null == selectedPM) { // happens on deselect
+					selectedBook.bookId.value = null
+				}
 				selectedBook.bookId.value = selectedPM.id
 			} as ChangeListener)
 
