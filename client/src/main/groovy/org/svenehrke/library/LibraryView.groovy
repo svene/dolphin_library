@@ -8,6 +8,8 @@ import org.opendolphin.core.client.ClientPresentationModel
 import static groovyx.javafx.GroovyFX.start
 import static org.opendolphin.binding.JFXBinder.bind
 import static org.opendolphin.binding.JavaFxUtil.value
+import static org.svenehrke.library.Constants.ATT.AUTHOR
+import static org.svenehrke.library.Constants.ATT.TITLE
 import static org.svenehrke.library.Constants.CMD.PULL
 import static org.svenehrke.library.Constants.PM_ID.SELECTED
 
@@ -16,9 +18,9 @@ class LibraryView {
 	static show(ClientDolphin clientDolphin) {
 
 		ObservableList<ClientPresentationModel> observableBooks = FXCollections.observableArrayList()
-		def selectedBook = clientDolphin.presentationModel(SELECTED, bookId: null, active: false )
+		def selectedBook = clientDolphin.presentationModel(SELECTED, bookId: null, active: false, (AUTHOR): '-', (TITLE): '-' )
 
-		def editor = new BookEditor(bookPM: selectedBook, clientDolphin: clientDolphin)
+		def editor = new BookEditor(selectedBook: selectedBook, clientDolphin: clientDolphin)
 
 		start { app ->
 			def sgb = delegate
