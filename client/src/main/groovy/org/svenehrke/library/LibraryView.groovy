@@ -1,5 +1,4 @@
 package org.svenehrke.library
-
 import javafx.beans.value.ChangeListener
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
@@ -18,6 +17,8 @@ class LibraryView {
 		ObservableList<ClientPresentationModel> observableBooks = FXCollections.observableArrayList()
 		def selectedBook = clientDolphin.presentationModel(SELECTED, bookId: null )
 
+		def editor = new BookEditor(bookPM: selectedBook, clientDolphin: clientDolphin)
+
 		start { app ->
 			def sgb = delegate
 			stage title:'Dolphin Library', {
@@ -33,7 +34,7 @@ class LibraryView {
 						}
 						stackPane {
 							text "Please select a Book", id: 'welcome'
-							pane id:'bookDetails'
+							pane id:'bookDetails', { editor.cachedOrNewView(sgb) }
 						}
 					}
 				}
