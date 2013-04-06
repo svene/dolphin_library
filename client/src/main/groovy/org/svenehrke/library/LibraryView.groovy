@@ -6,6 +6,7 @@ import org.opendolphin.core.client.ClientDolphin
 import org.opendolphin.core.client.ClientPresentationModel
 
 import static groovyx.javafx.GroovyFX.start
+import static org.opendolphin.binding.JFXBinder.bind
 import static org.opendolphin.binding.JavaFxUtil.value
 import static org.svenehrke.library.Constants.CMD.PULL
 import static org.svenehrke.library.Constants.PM_ID.SELECTED
@@ -15,7 +16,7 @@ class LibraryView {
 	static show(ClientDolphin clientDolphin) {
 
 		ObservableList<ClientPresentationModel> observableBooks = FXCollections.observableArrayList()
-		def selectedBook = clientDolphin.presentationModel(SELECTED, bookId: null )
+		def selectedBook = clientDolphin.presentationModel(SELECTED, bookId: null, active: false )
 
 		def editor = new BookEditor(bookPM: selectedBook, clientDolphin: clientDolphin)
 
@@ -40,17 +41,18 @@ class LibraryView {
 				}
 			}
 
-			sgb.bookDetails.children << editor.cachedOrNewView(sgb)
+			javafx.scene.Node editorNode = editor.cachedOrNewView(sgb)
+			sgb.bookDetails.children << editorNode
 
-//			bind 'visible' of bookDetails to 'bookId' of selectedBook
+			bind 'active' of selectedBook to 'visible' of bookDetails
+			bind 'active' of selectedBook to 'visible' of (welcome, { !it} )
 
 			books.items = observableBooks
 
 			books.selectionModel.selectedItemProperty().addListener( { o, oldVal, selectedPM ->
-				if (null == selectedPM) { // happens on deselect
-					selectedBook.bookId.value = null
-				}
-				selectedBook.bookId.value = selectedPM.id
+				boolean gotDeselected = !selectedPM
+				selectedBook.bookId.value = gotDeselected ? null : selectedPM.id
+				selectedBook.active.value = !gotDeselected
 			} as ChangeListener)
 
 			clientDolphin.send PULL, { pms ->
