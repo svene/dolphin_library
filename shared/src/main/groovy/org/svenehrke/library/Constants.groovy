@@ -8,6 +8,8 @@ class Constants {
 		public static final String DOMAIN_ID = 'domainId'
 		public static final String TITLE      = 'title'
 		public static final String AUTHOR     = 'author'
+
+		static final List<String> ALL_ATTRIBUTES = [DOMAIN_ID, TITLE, AUTHOR]
 	}
 	static class PM_ID {
 		public static final String SELECTED  = Constants.unique 'selected'

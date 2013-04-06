@@ -6,10 +6,8 @@ import org.opendolphin.core.client.ClientDolphin
 import org.opendolphin.core.client.ClientPresentationModel
 
 import static groovyx.javafx.GroovyFX.start
-import static org.opendolphin.binding.JFXBinder.bind
 import static org.opendolphin.binding.JavaFxUtil.value
-import static org.svenehrke.library.Constants.ATT.AUTHOR
-import static org.svenehrke.library.Constants.ATT.TITLE
+import static org.svenehrke.library.Constants.ATT.ALL_ATTRIBUTES
 import static org.svenehrke.library.Constants.CMD.PULL
 import static org.svenehrke.library.Constants.PM_ID.SELECTED
 
@@ -18,7 +16,7 @@ class LibraryView {
 	static show(ClientDolphin clientDolphin) {
 
 		ObservableList<ClientPresentationModel> observableBooks = FXCollections.observableArrayList()
-		def selectedBook = clientDolphin.presentationModel(SELECTED, bookId: null, active: false, (AUTHOR): '-', (TITLE): '-' )
+		def selectedBook = clientDolphin.presentationModel(SELECTED, ALL_ATTRIBUTES)
 
 		def editor = new BookEditor(selectedBook: selectedBook, clientDolphin: clientDolphin)
 
@@ -46,15 +44,22 @@ class LibraryView {
 			javafx.scene.Node editorNode = editor.cachedOrNewView(sgb)
 			sgb.bookDetails.children << editorNode
 
-			bind 'active' of selectedBook to 'visible' of bookDetails
-			bind 'active' of selectedBook to 'visible' of (welcome, { !it} )
+//			bind 'active' of selectedBook to 'visible' of bookDetails
+//			bind 'active' of selectedBook to 'visible' of (welcome, { !it} )
 
 			books.items = observableBooks
 
+			// used as both, event handler and change listener
+			def changeSelectionHandler = { pm ->
+				return {
+					clientDolphin.apply pm to selectedBook
+				}
+			}
+
+
 			books.selectionModel.selectedItemProperty().addListener( { o, oldVal, selectedPM ->
 				boolean gotDeselected = !selectedPM
-				selectedBook.bookId.value = gotDeselected ? null : selectedPM.id
-				selectedBook.active.value = !gotDeselected
+				changeSelectionHandler(selectedPM).call()
 			} as ChangeListener)
 
 			clientDolphin.send PULL, { pms ->

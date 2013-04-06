@@ -2,10 +2,9 @@ package org.svenehrke.library
 import groovyx.javafx.SceneGraphBuilder
 import org.opendolphin.core.client.ClientDolphin
 import org.opendolphin.core.client.ClientPresentationModel
-import static org.opendolphin.binding.JFXBinder.bind
 
+import static org.opendolphin.binding.JFXBinder.bind
 import static org.svenehrke.library.Constants.ATT.TITLE
-import static org.svenehrke.library.Constants.PM_ID.SELECTED
 
 @SuppressWarnings("GroovyAssignabilityCheck")
 class BookEditor {
@@ -18,7 +17,6 @@ class BookEditor {
 		if (! view) {
 			view = newView sgb
 			initializeBindings sgb
-			setCurrentBook()
 		}
 		return view
 	}
@@ -44,8 +42,4 @@ class BookEditor {
 		}
 	}
 
-	def void setCurrentBook() {
-		def pm = clientDolphin.findPresentationModelById(SELECTED)
-		pm['bookId'].value = selectedBook.id
-	}
 }
